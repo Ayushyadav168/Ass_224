@@ -1,0 +1,167 @@
+<html></html>
+ <head>
+  <title>
+   Responsive UI
+  </title>
+  <script src="https://unpkg.com/react/umd/react.development.js">
+  </script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js">
+  </script>
+  <script src="https://unpkg.com/@babel/standalone/babel.js">
+  </script>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+        .left-panel {
+            flex: 1;
+        }
+        .right-panel {
+            flex: 1;
+            max-width: 600px;
+        }
+        .widget {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background-color: #3a3a3a;
+        }
+        .gallery {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gallery img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+        }
+        .gallery-controls {
+            display: flex;
+            align-items: center;
+        }
+        .gallery-controls button {
+            background-color: #3a3a3a;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+  </style>
+ </head>
+ <body>
+  <div id="root">
+  </div>
+  <script type="text/babel">
+   const { useState } = React;
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('about');
+            const [images, setImages] = useState([
+                'https://placehold.co/100x100',
+                'https://placehold.co/100x100',
+                'https://placehold.co/100x100'
+            ]);
+
+            const handleTabClick = (tab) => {
+                setActiveTab(tab);
+            };
+
+            const handleAddImage = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        setImages([...images, e.target.result]);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            return (
+                <div className="container">
+                    <div className="left-panel"></div>
+                    <div className="right-panel">
+                        <div className="widget">
+                            <div className="tabs">
+                                <div className={`tab ${activeTab === 'about' ? 'active' : ''}`} onClick={() => handleTabClick('about')}>About Me</div>
+                                <div className={`tab ${activeTab === 'experiences' ? 'active' : ''}`} onClick={() => handleTabClick('experiences')}>Experiences</div>
+                                <div className={`tab ${activeTab === 'recommended' ? 'active' : ''}`} onClick={() => handleTabClick('recommended')}>Recommended</div>
+                            </div>
+                            <div className="content">
+                                {activeTab === 'about' && (
+                                    <div>
+                                        <p>Hello! I'm Dave, your sales rep here from Salesforce. I've been working at this awesome company for 3 years now.</p>
+                                        <p>I was born and raised in Albany, NY & have been living in Santa Carla for the past 10 years my wife Tiffany and my 4 year old twin daughters- Emma and Ella. Both of them are just starting school, so my calendar is usually blocked between 9-10 AM. This is a...</p>
+                                    </div>
+                                )}
+                                {activeTab === 'experiences' && (
+                                    <div>
+                                        <p>Here are some of my experiences...</p>
+                                    </div>
+                                )}
+                                {activeTab === 'recommended' && (
+                                    <div>
+                                        <p>Here are some recommended items...</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="widget">
+                            <div className="gallery">
+                                <div className="tab active">Gallery</div>
+                                <div className="gallery-controls">
+                                    <button onClick={() => document.getElementById('fileInput').click()}>+ ADD IMAGE</button>
+                                    <input id="fileInput" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAddImage} />
+                                    <button><i className="fas fa-arrow-left"></i></button>
+                                    <button><i className="fas fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <div className="images flex justify-between mt-4">
+                                {images.map((src, index) => (
+                                    <img key={index} src={src} alt={`Placeholder image ${index + 1}`} width="100" height="100" />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+ </body>
+</html>
